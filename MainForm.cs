@@ -54,7 +54,7 @@ namespace DispatcherSimulator
 
             var lblTitle = new Label
             {
-                Text = "Operační středisko 112",
+                Text = "Dispatcher Simulator",
                 ForeColor = Color.White,
                 Font = new Font("Segoe UI", 16F, FontStyle.Bold),
                 AutoSize = true,
