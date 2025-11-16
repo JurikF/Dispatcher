@@ -1,0 +1,15 @@
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.csproj.AssemblyReference.cache
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.AssemblyInfoInputs.cache
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.AssemblyInfo.cs
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.csproj.CoreCompileInputs.cache
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\DispatcherSimulator.exe
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\DispatcherSimulator.deps.json
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\DispatcherSimulator.runtimeconfig.json
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\DispatcherSimulator.dll
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\DispatcherSimulator.pdb
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.dll
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\refint\DispatcherSimulator.dll
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.pdb
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.genruntimeconfig.cache
+C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\ref\DispatcherSimulator.dll

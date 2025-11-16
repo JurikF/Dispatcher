@@ -1,0 +1,4 @@
+[
+  { "Id":1, "Title":"Požár v bytě", "Text":"Volající hlásí silný požár v panelovém domě. Vidí plameny a dým.", "Difficulty":"Easy", "RequiredUnits":["Fire"] },
+  { "Id":2, "Title":"Dopravní nehoda", "Text":"Kolize dvou aut, jeden zraněný bez vědomí.", "Difficulty":"Easy", "RequiredUnits":["Ambulance","Police"] }
+]
