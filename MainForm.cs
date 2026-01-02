@@ -10,6 +10,8 @@ namespace DispatcherSimulator
 {
     public partial class MainForm : Form
     {
+        private FlowLayoutPanel _callsFlowPanel;
+        private ListBox lstOldScenarios; 
         private const int Blue = 0;
 
         private List<Scenario> _scenarios = new();
@@ -35,7 +37,87 @@ namespace DispatcherSimulator
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
             this.TopMost = true;
+
+            // Přidej do konstruktoru MainForm nebo do Load:
+            var callTimer = new System.Windows.Forms.Timer();
+            callTimer.Interval = 5000; // Nový hovor každých 5 sekund (pro testování)
+            callTimer.Tick += (s, e) => 
+            {
+            if (_scenarios.Any())
+            {
+            var randomScenario = _scenarios[new Random().Next(_scenarios.Count)];
+            AddCallToDashboard(randomScenario);
+            }
+            };
+            callTimer.Start();
         }
+
+            private void AddCallToDashboard(Scenario scenario)
+        {
+        // Vytvoření kontejneru pro jednu kartu hovoru
+        var callCard = new Panel
+        {
+            Width = _callsFlowPanel.Width - 25,
+            Height = 60,
+            BackColor = Color.White,
+            Margin = new Padding(5, 10, 5, 5), // Druhé číslo (10) je horní mezera
+            BorderStyle = BorderStyle.FixedSingle,
+            Cursor = Cursors.Hand
+        };
+
+        var lblTitle = new Label
+        {
+            Text = $"📞 PŘÍCHOZÍ HOVOR: {scenario.Title}",
+            Font = new Font("Segoe UI", 10F, FontStyle.Bold),
+            AutoSize = true,
+            Top = 10,
+            Left = 10,
+            Enabled = false // Kliknutí zachytí panel pod ním
+        };
+
+        var lblHint = new Label
+        {
+            Text = "Klikněte pro přijetí hovoru...",
+            Font = new Font("Segoe UI", 8F, FontStyle.Italic),
+            AutoSize = true,
+            Top = 32,
+            Left = 10,
+            Enabled = false
+        };
+
+        callCard.Controls.Add(lblTitle);
+        callCard.Controls.Add(lblHint);
+
+        // Událost po kliknutí na kartu
+        callCard.Click += (s, e) =>
+        {
+            using (var callDialog = new CallForm(scenario))
+            {
+                if (callDialog.ShowDialog() == DialogResult.OK)
+                {
+                    // Vyhodnocení
+                    if (EvaluateResponse(scenario, callDialog.SelectedUnits))
+                    {
+                        _score += 10;
+                        lstOldScenarios.Items.Insert(0, $"[VYŘEŠENO] {scenario.Title}");
+                    }
+                    else
+                    {
+                        _score -= 5;
+                        lstOldScenarios.Items.Insert(0, $"[CHYBA] {scenario.Title}");
+                    }
+                    UpdateScoreLabel();
+                    
+                    // Odstranění karty po vyřízení
+                    _callsFlowPanel.Controls.Remove(callCard);
+                }
+            }
+        };
+
+        // Přidání na panel (vložíme na začátek, aby nové byly nahoře)
+        _callsFlowPanel.Controls.Add(callCard);
+        _callsFlowPanel.Controls.SetChildIndex(callCard, 0);
+    }
 
         private void InitializeUI()
         {
@@ -131,20 +213,38 @@ namespace DispatcherSimulator
             // ===================== KVADRANTY =====================
 
             // Levý horní – scénář
-            var panelTopLeft = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20) };
-            lblScenario = new Label
+            var panelTopLeft = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10, 45, 10, 10) };
+            var lblCallsTitle = new Label
             {
-                Text = "Zde se zobrazí scénář...",
-                Font = new Font("Segoe UI", 16F),
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.TopLeft
+                Text = "Příchozí hovory:",
+                Font = new Font("Segoe UI", 14F, FontStyle.Bold),
+                ForeColor = Color.DarkSlateBlue,
+                Dock = DockStyle.Top, // Tímto se ukotví nahoře
+                Height = 40,
+                TextAlign = ContentAlignment.MiddleLeft
+            
             };
-            panelTopLeft.Controls.Add(lblScenario);
+            
+            _callsFlowPanel = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.TopDown,
+                WrapContents = false,
+                AutoScroll = true,
+                BackColor = Color.FromArgb(235, 235, 235), // Světlejší šedá
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(0, 100, 0, 0)
+                
+            };
+            panelTopLeft.Controls.Add(_callsFlowPanel);
+            panelTopLeft.Controls.Add(lblCallsTitle);
+            lblCallsTitle.BringToFront();
+
             mainLayout4.Controls.Add(panelTopLeft, 0, 0);
 
             // Levý dolní – staré scénáře
-            var panelBottomLeft = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20) };
-            var lstOldScenarios = new ListBox
+            var panelBottomLeft = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10) };
+            lstOldScenarios = new ListBox
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Segoe UI", 12F)
@@ -468,3 +568,4 @@ namespace DispatcherSimulator
         public List<string>? RequiredUnits { get; set; }
     }
 }
+
