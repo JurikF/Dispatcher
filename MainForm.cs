@@ -104,7 +104,7 @@ namespace DispatcherSimulator
             
             _activeCallPanel = new Panel { Dock = DockStyle.Fill, Visible = false };
             
-            _txtChatDisplay = new TextBox { Multiline = true, ReadOnly = true, Dock = DockStyle.Top, Height = 250, BackColor = Color.Black, ForeColor = Color.Lime, Font = new Font("Consolas", 12F), BorderStyle = BorderStyle.None, ScrollBars = ScrollBars.Vertical};
+            _txtChatDisplay = new TextBox { Multiline = true, ReadOnly = true, Dock = DockStyle.Top, Height = 250, BackColor = Color.Black, ForeColor = Color.White, Font = new Font("Consolas", 12F), BorderStyle = BorderStyle.None, ScrollBars = ScrollBars.Vertical};
             var lblQuestion = new Label { Text = "OTÁZKY PRO VOLAJÍCÍHO:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 10F, FontStyle.Bold), ForeColor = Color.White };
             _questionFlowPanel = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 50, Padding = new Padding(0, 5, 0, 0) };
             var lblUnits = new Label { Text = "DOSTUPNÉ JEDNOTKY:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 10F, FontStyle.Bold), ForeColor = Color.White };
@@ -124,27 +124,56 @@ namespace DispatcherSimulator
             p2.Controls.Add(_activeCallPanel);
             mainLayout.Controls.Add(p2, 1, 0);
 
-            // LEVÝ DOLNÍ - Manuál
-            var p3 = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10), BackColor = Color.FromArgb(30, 30, 30) };
-            var lblMan = new Label { Text = "MANUÁL", Dock = DockStyle.Top, Height = 35, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.White };
-            manualPages = new[] {
-                "OVLÁDÁNÍ\r\n\r\n1. Vyber hovor vlevo.\r\n2. Získej info otázkami.\r\n3. Zvol jednotky a potvrď.",
-                "JEDNOTKY\r\n\r\nPOLICIE: Zločin, doprava.\r\nHASIČI: Oheň, nehody.\r\nZÁCHRANKA: Zdraví."
+            // LEVÝ DOLNÍ - LUSTRACE (Osoba i Auto)
+            var p3 = new Panel { Dock = DockStyle.Fill, Padding = new Padding(15), BackColor = Color.FromArgb(30, 30, 30) };
+            var lblLusTitle = new Label { Text = "TERMINÁL LUSTRACE", Dock = DockStyle.Top, Height = 30, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.Gold };
+
+            // Kontejner pro vstupy
+            var pnlInputs = new Panel { Dock = DockStyle.Top, Height = 110 };
+
+            // --- LEVÝ SLOUPEC (Osoba) ---
+            var txtSearchName = new TextBox { PlaceholderText = "Jméno a Příjmení...", Width = 210, Location = new Point(0, 5), Font = new Font("Segoe UI", 10F) };
+            var txtSearchBirth = new TextBox { PlaceholderText = "Narození (DD.MM.RRRR)...", Width = 210, Location = new Point(0, 35), Font = new Font("Segoe UI", 10F) };
+
+            // --- PRAVÝ SLOUPEC (Auto) ---
+            var txtSearchSPZ = new TextBox { PlaceholderText = "SPZ Vozidla...", Width = 150, Location = new Point(220, 5), Font = new Font("Segoe UI", 10F), CharacterCasing = CharacterCasing.Upper };
+            var lblCarInfo = new Label { Text = "<- Lustrace osob | Lustrace aut ->", ForeColor = Color.Gray, Font = new Font("Segoe UI", 7F), AutoSize = true, Location = new Point(220, 38) };
+
+            // Společné tlačítko
+            var btnSearch = new Button { 
+                Text = "SPUSTIT VYHLEDÁVÁNÍ V DATABÁZÍCH", 
+                Width = 370, Height = 35, 
+                Location = new Point(0, 70), 
+                BackColor = Color.FromArgb(50, 50, 50), 
+                ForeColor = Color.White, 
+                FlatStyle = FlatStyle.Flat,
+                Cursor = Cursors.Hand
             };
-            txtManual = new TextBox { Multiline = true, ReadOnly = true, Dock = DockStyle.Fill, BackColor = Color.FromArgb(40, 40, 40), ForeColor = Color.White, Font = new Font("Segoe UI", 15F), BorderStyle = BorderStyle.None, Text = manualPages[0] };
-            var nav = new Panel { Dock = DockStyle.Bottom, Height = 30 };
-            var bP = new Button { Text = "<", Dock = DockStyle.Left, Width = 40, BackColor = Color.FromArgb(70, 70, 70), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            var bN = new Button { Text = ">", Dock = DockStyle.Right, Width = 40, BackColor = Color.FromArgb(70, 70, 70), ForeColor = Color.White, FlatStyle = FlatStyle.Flat };
-            lblPageInfo = new Label { Text = "1 / 2", Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, ForeColor = Color.White };
-            bN.Click += (s, e) => { if (currentPage < 1) { currentPage++; txtManual.Text = manualPages[currentPage]; lblPageInfo.Text = $"{currentPage + 1} / 2"; } };
-            bP.Click += (s, e) => { if (currentPage > 0) { currentPage--; txtManual.Text = manualPages[currentPage]; lblPageInfo.Text = $"{currentPage + 1} / 2"; } };
-            p3.Controls.Add(lblMan);
-            nav.Controls.Add(lblPageInfo); 
-            nav.Controls.Add(bP); 
-            nav.Controls.Add(bN);
-            p3.Controls.Add(nav);
-            p3.Controls.Add(txtManual);
-            txtManual.BringToFront();
+
+            // Výsledkové pole
+            var txtLustraceResult = new TextBox { 
+                Multiline = true, ReadOnly = true, Dock = DockStyle.Fill, 
+                BackColor = Color.Black, ForeColor = Color.White, 
+                Font = new Font("Consolas", 11F), BorderStyle = BorderStyle.FixedSingle,
+                ScrollBars = ScrollBars.Vertical
+            };
+
+            btnSearch.Click += (s, e) => {
+                // Předáme všechna tři pole do vyhledávací metody
+                PerformLustrace(txtSearchName.Text, txtSearchBirth.Text, txtSearchSPZ.Text, txtLustraceResult);
+            };
+
+            pnlInputs.Controls.Add(txtSearchName);
+            pnlInputs.Controls.Add(txtSearchBirth);
+            pnlInputs.Controls.Add(txtSearchSPZ);
+            pnlInputs.Controls.Add(lblCarInfo);
+            pnlInputs.Controls.Add(btnSearch);
+
+            p3.Controls.Add(txtLustraceResult);
+            p3.Controls.Add(pnlInputs);
+            p3.Controls.Add(lblLusTitle);
+            txtLustraceResult.BringToFront();
+
             mainLayout.Controls.Add(p3, 0, 1);
 
             // PRAVÝ DOLNÍ - HISTORIE HOVORŮ (TADY JE ZMĚNA)
@@ -219,6 +248,70 @@ namespace DispatcherSimulator
             return p;
         }
 
+        private void PerformLustrace(string name, string birth, string spz, TextBox output)
+        {
+            try
+            {
+                output.ForeColor = Color.White;
+                output.Clear();
+
+                // 1. PŘEDNOST MÁ SPZ (pokud není prázdná)
+                if (!string.IsNullOrWhiteSpace(spz))
+                {
+                    string path = Path.Combine(Application.StartupPath, "C:\\Users\\Filip\\Desktop\\Dispatcher\\cars.json");
+                    if (File.Exists(path))
+                    {
+                        var cars = JsonSerializer.Deserialize<List<Car>>(File.ReadAllText(path), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        var car = cars?.FirstOrDefault(c => c.SPZ.Equals(spz.Trim(), StringComparison.OrdinalIgnoreCase));
+
+                        if (car != null)
+                        {
+                            if (car.IsStolen) output.ForeColor = Color.Red;
+                            output.Text = $"VÝSLEDEK LUSTRACE VOZIDLA:\r\n" +
+                                        $"--------------------------------------\r\n" +
+                                        $"SPZ:      {car.SPZ.ToUpper()}\r\n" +
+                                        $"MODEL:    {car.Model}\r\n" +
+                                        $"MAJITEL:  {car.Owner}\r\n" +
+                                        $"STAV:     {(car.IsStolen ? "!!! VOZIDLO JE KRADENÉ !!!" : "V pořádku (není hlášeno)")}\r\n" +
+                                        $"ZÁZNAM:   {car.Note}";
+                            return;
+                        }
+                    }
+                }
+
+                // 2. LUSTRACE OSOBY (pokud není vyplněná SPZ nebo se auto nenašlo)
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    string path = Path.Combine(Application.StartupPath, "C:\\Users\\Filip\\Desktop\\Dispatcher\\people.json");
+                    if (File.Exists(path))
+                    {
+                        var people = JsonSerializer.Deserialize<List<Person>>(File.ReadAllText(path), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        var person = people?.FirstOrDefault(p => 
+                            (p.FirstName + " " + p.LastName).Equals(name.Trim(), StringComparison.OrdinalIgnoreCase) && 
+                            p.BirthDate.Trim() == birth.Trim());
+
+                        if (person != null)
+                        {
+                            if (person.IsWanted) output.ForeColor = Color.Red;
+                            output.Text = $"VÝSLEDEK LUSTRACE OSOBY:\r\n" +
+                                        $"--------------------------------------\r\n" +
+                                        $"OSOBA:    {person.FirstName.ToUpper()} {person.LastName.ToUpper()}\r\n" +
+                                        $"NAR.:     {person.BirthDate}\r\n" +
+                                        $"STAV:     {(person.IsWanted ? "!!! OSOBA V PÁTRÁNÍ !!!" : "Negativní")}\r\n" +
+                                        $"ZÁZNAM:   {person.Note}";
+                            return;
+                        }
+                    }
+                }
+
+                output.Text = "SYSTÉM: Žádný záznam neodpovídá zadaným parametrům.";
+            }
+            catch (Exception ex)
+            {
+                output.ForeColor = Color.Orange;
+                output.Text = "CHYBA DATABÁZE: " + ex.Message;
+            }
+        }
         private void GenerateRandomCall()
         {
             if (_scenarios == null || _scenarios.Count == 0) return;
@@ -247,46 +340,109 @@ namespace DispatcherSimulator
             var card = new Panel { Width = _callsFlowPanel.Width - 35, Height = 60, BackColor = Color.White, Margin = new Padding(5), BorderStyle = BorderStyle.FixedSingle, Cursor = Cursors.Hand };
             card.Controls.Add(new Label { Text = $"📞 {scenario.Title}", Font = new Font("Segoe UI", 10F, FontStyle.Bold), AutoSize = true, Top = 20, Left = 10, Enabled = false });
             card.Click += (s, e) => {
-                _currentActiveScenario = scenario; _currentActiveCard = card;
-                lblNoCall.Visible = false; _activeCallPanel.Visible = true;
-                _txtChatDisplay.Text = $"[DISPEČINK]: Tísňová linka, jak vám mohu pomoci?\r\n" + $"[VOLAJÍCÍ]: {scenario.Text}\r\n";  
-                _questionFlowPanel.Controls.Clear();
-                _questionFlowPanel.Controls.Clear();
+            _currentActiveScenario = scenario; 
+            _currentActiveCard = card;
+            lblNoCall.Visible = false; 
+            _activeCallPanel.Visible = true;
+            bool isPoliceCall = scenario.Title.Contains("👮");
+            string callerName = scenario.Title.Contains("👮") ? scenario.NameAnswer : "VOLAJÍCÍ";
+            
+            if (isPoliceCall)
+            {
+                // U policie začíná rovnou hlášení hlídky (bez tvého úvodu)
+                _txtChatDisplay.Text = $"[{callerName.ToUpper()}]: {scenario.Text}\r\n\r\n";
+            }
+            else
+            {
+                // U civilistů zůstává standardní pozdrav operátora
+                _txtChatDisplay.Text = $"[DISPEČINK]: Tísňová linka, jak vám mohu pomoci?\r\n" + 
+                                    $"[VOLAJÍCÍ]: {scenario.Text}\r\n\r\n";
+            }
+            
+            _questionFlowPanel.Controls.Clear();
 
-            // JMÉNO
-            AddQuestionButton("Jméno", new[] { 
-                "Můžete mi uvést vaše jméno?", 
-                "S kým mluvím, prosím?", 
-                "Jak se jmenujete?" 
-            }, scenario.NameAnswer);
+            // ROZCESTNÍK: Je to policie, nebo civilista?
+            if (scenario.Title.Contains("👮"))
+            {   
+                AddQuestionButton("POLOHA HLÍDKY", new[] { 
+                "Udejte vaši přesnou polohu.", 
+                "Kde se právě nacházíte?", 
+                "Vaše GPS nebo ulice?" 
+            }, scenario.LocationAnswer, callerName);
 
-            // LOKALITA
-            AddQuestionButton("Lokalita", new[] { 
-                "Kde přesně se nacházíte?", 
-                "Jaká je vaše přesná adresa?", 
-                "Můžete mi popsat, kde se místo události nachází?" 
-            }, scenario.LocationAnswer);
+                // 1. SITUACE: STŘELBA / NAPADENÍ
+                if (scenario.Text.Contains("střelb") || scenario.Text.Contains("napaden"))
+                {
+                    AddQuestionButton("STAV NA MÍSTĚ", new[] { "Jaká je situace na místě? Jsou tam zranění?" }, scenario.DetailsAnswer, callerName);
+                    AddQuestionButton("POTVRDIT PŘÍJEM", new[] { "Posílám posily." }, "Rozumím vesmíre.", callerName);
+                }
+                // 2. SITUACE: PRONÁSLEDOVÁNÍ VOZIDLA
+                else if (scenario.Text.Contains("pronásledujeme") || scenario.Text.Contains("vozidlo"))
+                {
+                    Button btnOdcizeno = null;
+                    Button btnNeniOdcizeno = null;
 
-            // ZRANĚNÍ
-            AddQuestionButton("Zranění", new[] { 
-                "Je tam někdo zraněný?", 
-                "Jsou na místě nějaké oběti nebo zranění?", 
-                "Potřebuje někdo okamžitou lékařskou pomoc?" 
-            }, scenario.InjuryAnswer);
+                    AddQuestionButton("ŽÁDAT SPZ", new[] { "Nadiktujte SPZ a popis vozidla." }, scenario.DetailsAnswer, callerName);
+                    AddQuestionButton("POSÍLÁM POSILY", new[] { "Rozumím, posílám k vám další hlídky." }, "Rozumím.", callerName);
+                    btnOdcizeno = CreateQuestionButton("ODCIZENO", new[] { "Vozidlo je nahlášeno jako kradené!" }, "Potvrzuji, vozidlo je kradené!", callerName);
+                    btnNeniOdcizeno = CreateQuestionButton("NEODCIZENO", new[] { "Vozidlo není nahlášeno jako kradené!" }, "Potvrzuji, vozidlo není kradené!", callerName);
 
-            // DETAILY
-            AddQuestionButton("Detaily", new[] { 
-                "Můžete mi k tomu říct víc podrobností?", 
-                "Co přesně se na místě děje?", 
-                "Popište mi situaci podrobněji." 
-            }, scenario.DetailsAnswer);
+                    btnOdcizeno.Click += (s, e) => {
+                    btnOdcizeno.Enabled = false;
+                    btnNeniOdcizeno.Enabled = false;    
+                    btnNeniOdcizeno.BackColor = Color.Gray;
+                };
 
-            };
+                btnNeniOdcizeno.Click += (s, e) => {
+                    btnNeniOdcizeno.Enabled = false;
+                    btnOdcizeno.Enabled = false;
+                    btnOdcizeno.BackColor = Color.Gray;
+                };
+
+                _questionFlowPanel.Controls.Add(btnOdcizeno);
+                _questionFlowPanel.Controls.Add(btnNeniOdcizeno);
+                }
+                // 3. SITUACE: STANDARDNÍ LUSTRACE (původní)
+                else
+                {
+                    Button btnJeHledany = null;
+                    Button btnNeniHledany = null;
+
+                    AddQuestionButton("ŽÁDAT ÚDAJE", new[] { "Nadiktujte mi jméno a datum narození." }, scenario.DetailsAnswer, callerName);
+                    btnJeHledany = CreateQuestionButton("JE HLEDANÝ", new[] { "Osoba je v pátrání!" }, "Rozumím, žádáme posilu na naši pozici.", callerName);
+                    btnNeniHledany = CreateQuestionButton("NENÍ HLEDANÝ", new[] { "Osoba je čistá." }, "Díky, končíme.", callerName);
+
+                // Přidáme logiku pro zamknutí
+                btnJeHledany.Click += (s, e) => {
+                    btnJeHledany.Enabled = false;
+                    btnNeniHledany.Enabled = false;
+                    btnNeniHledany.BackColor = Color.Gray;
+                };
+
+                btnNeniHledany.Click += (s, e) => {
+                    btnNeniHledany.Enabled = false;
+                    btnJeHledany.Enabled = false;
+                    btnJeHledany.BackColor = Color.Gray;
+                };
+
+                _questionFlowPanel.Controls.Add(btnJeHledany);
+                _questionFlowPanel.Controls.Add(btnNeniHledany);
+                }
+            }
+            else
+            {
+                // --- STANDARDNÍ TLAČÍTKA PRO CIVILISTY ---
+                AddQuestionButton("Jméno", new[] { "S kým mluvím?", "Vaše jméno?" }, scenario.NameAnswer, callerName);
+                AddQuestionButton("Lokalita", new[] { "Kde přesně jste?", "Udejte polohu." }, scenario.LocationAnswer, callerName);
+                AddQuestionButton("Zranění", new[] { "Jsou tam zranění?" }, scenario.InjuryAnswer, callerName);
+                AddQuestionButton("Detaily", new[] { "Co se tam děje?", "Popište mi situaci." }, scenario.DetailsAnswer, callerName);
+            }
+        };
             _callsFlowPanel.Controls.Add(card);
             _callsFlowPanel.Controls.SetChildIndex(card, 0);
         }
 
-        private void AddQuestionButton(string buttonText, string[] speechOptions, string answerText) 
+        private void AddQuestionButton(string buttonText, string[] speechOptions, string answerText, string callerName) 
 {
     var b = new Button 
     { 
@@ -304,14 +460,46 @@ namespace DispatcherSimulator
         string vybranaVeta = speechOptions[rnd.Next(speechOptions.Length)];
 
         _txtChatDisplay.AppendText($"[DISPEČINK]: {vybranaVeta}\r\n");
-        _txtChatDisplay.AppendText($"[VOLAJÍCÍ]: {answerText}\r\n\r\n"); 
+        _txtChatDisplay.AppendText($"[{callerName.ToUpper()}]: {answerText}\r\n\r\n"); 
         
         b.Enabled = false; 
-        b.BackColor = Color.LightGray; 
+        b.BackColor = Color.LightGray;
     };
 
     _questionFlowPanel.Controls.Add(b);
 }
+
+        // Tato metoda funguje stejně jako AddQuestionButton, ale vrací vytvořené tlačítko
+        private Button CreateQuestionButton(string buttonText, string[] speechOptions, string answerText, string callerName)
+        {
+            var b = new Button
+            {
+                Text = buttonText,
+                Width = 110,
+                Height = 35,
+                BackColor = Color.FromArgb(210, 210, 210),
+                ForeColor = Color.Black,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold)
+            };
+
+            b.Click += (s, e) => {
+                Random rnd = new Random();
+                string vybranaVeta = speechOptions[rnd.Next(speechOptions.Length)];
+                
+                // 1. Zpráva od dispečera
+                _txtChatDisplay.AppendText($"[DISPEČINK]: {vybranaVeta}\r\n");
+                
+                // 2. Zpráva od jednotky (použije se callerName předaný z AddCallToDashboard)
+                // Přidali jsme .ToUpper() pro autentičnost
+                _txtChatDisplay.AppendText($"[{callerName.ToUpper()}]: {answerText}\r\n\r\n");
+                
+                b.Enabled = false;
+                b.BackColor = Color.LightGray;
+            };
+
+            return b;
+        }
 
         private void HandleConfirmation() {
             if (_currentActiveScenario == null) return;
@@ -339,8 +527,16 @@ namespace DispatcherSimulator
         }
 
         private bool EvaluateResponse(Scenario s, List<string> sel) {
+            // Pokud je osoba v pátrání (toto by šlo vylepšit detekcí v kódu, 
+            // ale pro teď to necháme na s.RequiredUnits v JSONu)
+            
+            // Pokud v JSONu nejsou žádné vyžadované jednotky, a hráč žádné neposlal, je to OK.
+            if (s.RequiredUnits.Count == 0 && sel.Count == 0) return true;
+
             var req = new HashSet<string>(s.RequiredUnits ?? new());
-            return req.SetEquals(new HashSet<string>(sel));
+            var sent = new HashSet<string>(sel);
+            
+            return req.SetEquals(sent);
         }
 
         private void LoadScenarios()
@@ -393,5 +589,23 @@ namespace DispatcherSimulator
     public List<string> UserSentUnits { get; set; } = new();
     public bool WasCorrect { get; set; }
     public override string ToString() => $"{DateTime.Now:HH:mm} {(WasCorrect ? "[Správně]" : "[Chybně]")} - {EventName}";
+    }
+
+    public class Person
+    {
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public string BirthDate { get; set; } = "";
+        public bool IsWanted { get; set; }
+        public string Note { get; set; } = "";
+    }
+
+    public class Car 
+    {
+        public string SPZ { get; set; } = "";
+        public string Model { get; set; } = "";
+        public string Owner { get; set; } = "";
+        public bool IsStolen { get; set; }
+        public string Note { get; set; } = "";
     }
 }

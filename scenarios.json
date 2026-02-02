@@ -104,7 +104,7 @@
     "RequiredUnits": ["Záchranka"],
     "NameAnswer": "Tomáš Petrů, čekal jsem na spoj.",
     "LocationAnswer": "Zastávka Hlavní nádraží, směr do centra.",
-    "InjuryAnswer": "Paní nedýchá! Začínám s masáží srdce podle vašich pokynů!",
+    "InjuryAnswer": "Paní nedýchá!",
     "DetailsAnswer": "Je jí kolem 70 let, má u sebe nákupní tašku."
   },
   {
@@ -118,5 +118,38 @@
     "LocationAnswer": "Dálnice D1, asi 154. kilometr, směr na Brno.",
     "InjuryAnswer": "Řidič toho kamionu je v kabině, nemůžu se k němu dostat.",
     "DetailsAnswer": "Z cisterny vytéká hustá žlutá kapalina a strašně to zapáchá po chlóru."
+  },
+  {
+  "Id": 101,
+  "Title": "👮 RÁDIO: DELTA-4",
+  "EventName": "Lustrace: Petr Svoboda",
+  "Text": "Vesmír Vesmír, já Delta-4, provádíme kontrolu osob v parku. Žádáme o lustraci.",
+  "Difficulty": "Střední",
+  "RequiredUnits": [],
+  "NameAnswer": "DELTA-4",
+  "LocationAnswer": "Městský park, kousek od té velké fontány.", 
+  "DetailsAnswer": "Je to Petr Svoboda, narozen 01.01.1990."
+  },
+  {
+  "Id": 102,
+  "Title": "👮 RÁDIO: LIBELA-10",
+  "EventName": "Střelba",
+  "Text": "Vesmír Vesmír, já Libela-10, prosím tě slyšíme střelbu. Žádáme o posily a záchranku na pomoc.",
+  "Difficulty": "Střední",
+  "RequiredUnits": ["Pořádková policie", "Záchranka"],
+  "NameAnswer": "LIBELA-10",
+  "LocationAnswer": "Je to ulice Slunečná 15, panelový dům u parku.", 
+  "DetailsAnswer": "Nevíme přesně, slyšíme jen střelbu a křik."
+  },
+  {
+  "Id": 103,
+  "Title": "👮 RÁDIO: DELTA-3",
+  "EventName": "Pronásledování vozidla",
+  "Text": "Vesmír Vesmír, já Delta-3, pronásledujeme ujíždějící vozidlo. Žádáme o posily a lustraci vozidla.",
+  "Difficulty": "Střední",
+  "RequiredUnits": ["Pořádková policie"],
+  "NameAnswer": "DELTA-3",
+  "LocationAnswer": "Jedeme směr centrum, teď projíždímě kolem benzínky.", 
+  "DetailsAnswer": "SPZ 1AB 1234, je to černé BMW."
   }
 ]
