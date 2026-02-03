@@ -84,7 +84,7 @@ namespace DispatcherSimulator
             var mainLayout = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 2, CellBorderStyle = TableLayoutPanelCellBorderStyle.Single };
             mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             mainLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F)); // Horní část trochu větší pro terminál
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F)); 
             mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             this.Controls.Add(mainLayout);
 
@@ -92,7 +92,7 @@ namespace DispatcherSimulator
 
             // LEVÝ HORNÍ - Seznam hovorů
             var p1 = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10, 70, 10, 10), BackColor = Color.FromArgb(30, 30, 30) };
-            var lblCallsTitle = new Label { Text = "PŘÍCHOZÍ HOVORY", Dock = DockStyle.Top, Height = 35, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.White };
+            var lblCallsTitle = new Label { Text = "PŘÍCHOZÍ HOVORY", Dock = DockStyle.Top, Height = 30, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.Gold };
             _callsFlowPanel = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, BackColor = Color.FromArgb(40, 40, 40) };
             p1.Controls.Add(_callsFlowPanel);
             p1.Controls.Add(lblCallsTitle);
@@ -103,14 +103,14 @@ namespace DispatcherSimulator
             lblNoCall = new Label { Text = "TERMINÁL NEAKTIVNÍ\r\nVyberte hovor ze seznamu", ForeColor = Color.White, Font = new Font("Consolas", 14F), Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter };
             
             _activeCallPanel = new Panel { Dock = DockStyle.Fill, Visible = false };
-            
+
             _txtChatDisplay = new TextBox { Multiline = true, ReadOnly = true, Dock = DockStyle.Top, Height = 250, BackColor = Color.Black, ForeColor = Color.White, Font = new Font("Consolas", 12F), BorderStyle = BorderStyle.None, ScrollBars = ScrollBars.Vertical};
-            var lblQuestion = new Label { Text = "OTÁZKY PRO VOLAJÍCÍHO:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 10F, FontStyle.Bold), ForeColor = Color.White };
+            var lblQuestion = new Label { Text = "MOŽNÉ OTÁZKY:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 10F, FontStyle.Bold), ForeColor = Color.White };
             _questionFlowPanel = new FlowLayoutPanel { Dock = DockStyle.Top, Height = 50, Padding = new Padding(0, 5, 0, 0) };
             var lblUnits = new Label { Text = "DOSTUPNÉ JEDNOTKY:", Dock = DockStyle.Top, Height = 25, Font = new Font("Segoe UI", 10F, FontStyle.Bold), ForeColor = Color.White };
             _unitSelectionPanel = new FlowLayoutPanel { Dock = DockStyle.Fill, BackColor = Color.FromArgb(35, 35, 35), Padding = new Padding(5) };
             
-            var btnConfirm = new Button { Text = "POTVRDIT A VYSLAT", Dock = DockStyle.Bottom, Height = 50, BackColor = Color.DarkGreen, ForeColor = Color.White, Font = new Font("Segoe UI", 12F, FontStyle.Bold), FlatStyle = FlatStyle.Flat };
+            var btnConfirm = new Button { Text = "POTVRDIT A VYSLAT", Dock = DockStyle.Bottom, Height = 50, BackColor = Color.FromArgb(50, 50, 50), ForeColor = Color.Gold, Font = new Font("Segoe UI", 12F, FontStyle.Bold), FlatStyle = FlatStyle.Flat };
             btnConfirm.Click += (s, e) => HandleConfirmation();
 
             _activeCallPanel.Controls.Add(_unitSelectionPanel);
@@ -126,26 +126,60 @@ namespace DispatcherSimulator
 
             // LEVÝ DOLNÍ - LUSTRACE (Osoba i Auto)
             var p3 = new Panel { Dock = DockStyle.Fill, Padding = new Padding(15), BackColor = Color.FromArgb(30, 30, 30) };
-            var lblLusTitle = new Label { Text = "TERMINÁL LUSTRACE", Dock = DockStyle.Top, Height = 30, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.Gold };
+
+            var lblLusTitle = new Label { 
+                Text = "LUSTRACE OSOB A VOZIDEL", 
+                Dock = DockStyle.Top, Height = 30, 
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold), 
+                ForeColor = Color.Gold 
+            };
 
             // Kontejner pro vstupy
             var pnlInputs = new Panel { Dock = DockStyle.Top, Height = 110 };
 
             // --- LEVÝ SLOUPEC (Osoba) ---
-            var txtSearchName = new TextBox { PlaceholderText = "Jméno a Příjmení...", Width = 210, Location = new Point(0, 5), Font = new Font("Segoe UI", 10F) };
-            var txtSearchBirth = new TextBox { PlaceholderText = "Narození (DD.MM.RRRR)...", Width = 210, Location = new Point(0, 35), Font = new Font("Segoe UI", 10F) };
+            var lblPersonInfo = new Label { 
+                Text = "Vyhledat osobu:", 
+                ForeColor = Color.Gold, 
+                Font = new Font("Segoe UI", 12F), 
+                AutoSize = true, 
+                Location = new Point(0, 5),
+            };
 
-            // --- PRAVÝ SLOUPEC (Auto) ---
-            var txtSearchSPZ = new TextBox { PlaceholderText = "SPZ Vozidla...", Width = 150, Location = new Point(220, 5), Font = new Font("Segoe UI", 10F), CharacterCasing = CharacterCasing.Upper };
-            var lblCarInfo = new Label { Text = "<- Lustrace osob | Lustrace aut ->", ForeColor = Color.Gray, Font = new Font("Segoe UI", 7F), AutoSize = true, Location = new Point(220, 38) };
+            var txtSearchName = new TextBox { 
+                PlaceholderText = "Jméno a Příjmení", 
+                Width = 210, Location = new Point(0, 35), 
+                Font = new Font("Segoe UI", 10F) 
+            };
+
+            var txtSearchBirth = new TextBox { 
+                PlaceholderText = "Narození (DD.MM.RRRR)",
+                Width = 210, Location = new Point(0, 65), 
+                Font = new Font("Segoe UI", 10F) 
+            };
+
+            var lblCarInfo = new Label { 
+                Text = "Vyhledat vozidlo:", 
+                ForeColor = Color.Gold, 
+                Font = new Font("Segoe UI", 12F), 
+                AutoSize = true, 
+                Location = new Point(220, 5),
+            };
+
+            var txtSearchSPZ = new TextBox { 
+                PlaceholderText = "Zadejte SPZ vozidla",  
+                Width = 210, Location = new Point(220, 35), 
+                Font = new Font("Segoe UI", 10F), 
+                CharacterCasing = CharacterCasing.Upper,
+            };
 
             // Společné tlačítko
             var btnSearch = new Button { 
-                Text = "SPUSTIT VYHLEDÁVÁNÍ V DATABÁZÍCH", 
-                Width = 370, Height = 35, 
-                Location = new Point(0, 70), 
+                Text = "VYHLEDAT", 
+                Width = 400, Height = 60, 
+                Location = new Point(480, 5), 
                 BackColor = Color.FromArgb(50, 50, 50), 
-                ForeColor = Color.White, 
+                ForeColor = Color.Gold, 
                 FlatStyle = FlatStyle.Flat,
                 Cursor = Cursors.Hand
             };
@@ -163,10 +197,11 @@ namespace DispatcherSimulator
                 PerformLustrace(txtSearchName.Text, txtSearchBirth.Text, txtSearchSPZ.Text, txtLustraceResult);
             };
 
+            pnlInputs.Controls.Add(lblPersonInfo);
             pnlInputs.Controls.Add(txtSearchName);
             pnlInputs.Controls.Add(txtSearchBirth);
-            pnlInputs.Controls.Add(txtSearchSPZ);
             pnlInputs.Controls.Add(lblCarInfo);
+            pnlInputs.Controls.Add(txtSearchSPZ);
             pnlInputs.Controls.Add(btnSearch);
 
             p3.Controls.Add(txtLustraceResult);
@@ -178,7 +213,7 @@ namespace DispatcherSimulator
 
             // PRAVÝ DOLNÍ - HISTORIE HOVORŮ (TADY JE ZMĚNA)
             var p4 = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10), BackColor = Color.FromArgb(30, 30, 30) };
-            var lblHistTitle = new Label { Text = "HISTORIE VYŘÍZENÝCH HOVORŮ", Dock = DockStyle.Top, Height = 35, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.White };
+            var lblHistTitle = new Label { Text = "HISTORIE VYŘÍZENÝCH HOVORŮ", Dock = DockStyle.Top, Height = 30, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.Gold };
             lstHistory = new ListBox { Dock = DockStyle.Fill, BackColor = Color.FromArgb(40, 40, 40), ForeColor = Color.LightGray, Font = new Font("Consolas", 15F), BorderStyle = BorderStyle.None };
             p4.Controls.Add(lstHistory);
             p4.Controls.Add(lblHistTitle);
@@ -194,7 +229,7 @@ namespace DispatcherSimulator
             if (lstHistory.SelectedItem is Scenario s)
             {
                 string vyzadovano = string.Join(", ", s.RequiredUnits);
-                string vyslano = s.UserSentUnits.Count > 0 ? string.Join(", ", s.UserSentUnits) : "Nic";
+                string vyslano = s.UserSentUnits.Count > 0 ? string.Join(", ", s.UserSentUnits) : "";
                 
                 Form detailForm = new Form();
                 detailForm.Text = "Detail zásahu - " + s.EventName;
@@ -356,7 +391,7 @@ namespace DispatcherSimulator
             {
                 // U civilistů zůstává standardní pozdrav operátora
                 _txtChatDisplay.Text = $"[DISPEČINK]: Tísňová linka, jak vám mohu pomoci?\r\n" + 
-                                    $"[VOLAJÍCÍ]: {scenario.Text}\r\n\r\n";
+                                       $"[VOLAJÍCÍ]: {scenario.Text}\r\n\r\n";
             }
             
             _questionFlowPanel.Controls.Clear();

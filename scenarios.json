@@ -17,7 +17,7 @@
     "EventName": "Dopravní nehoda",
     "Text": "Právě se tady čelně srazila dvě auta! Je to hrozná rána.",
     "Difficulty": "Lehká",
-    "RequiredUnits": ["Záchranka", "Dopravní policie"],
+    "RequiredUnits": ["Záchranka", "Dopravní policie", "Hasiči"],
     "NameAnswer": "Tady Petr Kolínský, jel jsem zrovna kolem.",
     "LocationAnswer": "Hlavní silnice směrem na Prahu, hned za tou velkou benzínkou.",
     "InjuryAnswer": "V tom stříbrném autě je někdo zaklíněný a nehýbe se!",
