@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DispatcherSimulator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85a1fa3e16f897d54ae46cfc26bf40cb80dc67a4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1127e7136f2dd2794da37957c2667858509b38de")]
 [assembly: System.Reflection.AssemblyProductAttribute("DispatcherSimulator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DispatcherSimulator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
