@@ -3,14 +3,21 @@
     "FirstName": "Jan",
     "LastName": "Novák",
     "BirthDate": "15.05.1985",
-    "IsWanted": true,
-    "Note": "Podezřelý z ozbrojeného přepadení. Extrémně nebezpečný!"
+    "IsWanted": false,
+    "Note": "Žádný záznam"
   },
   {
     "FirstName": "Petr",
     "LastName": "Svoboda",
     "BirthDate": "01.01.1990",
+    "IsWanted": true,
+    "Note": "Nenastoupil do výkonu trestu."
+  },
+  {
+    "FirstName": "Petr",
+    "LastName": "Dvořák",
+    "BirthDate": "01.09.1978",
     "IsWanted": false,
-    "Note": "Častý oznamovatel (narušená psychika)."
+    "Note": "Žádný záznam"
   }
 ]

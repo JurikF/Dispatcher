@@ -5,7 +5,7 @@
     "EventName": "Požár v bytě",
     "Text": "Pomoc! Z okna pode mnou se valí černý dým a slyším praskání!",
     "Difficulty": "Lehká",
-    "RequiredUnits": ["Hasiči"],
+    "RequiredUnits": ["Hasiči", "Záchranka"],
     "NameAnswer": "Jmenuji se Marie Sladká, bydlím o patro výš.",
     "LocationAnswer": "Je to ulice Slunečná 15, panelový dům u parku.",
     "InjuryAnswer": "Zatím nikoho nevidím, ale lidi vybíhají ven na ulici.",
@@ -42,9 +42,9 @@
     "Text": "Sakra, někdo se mi právě teď pokouší vloupat do garáže! Slyším páčení zámku!",
     "Difficulty": "Lehká",
     "RequiredUnits": ["Pořádková policie"],
-    "NameAnswer": "Tady Josef Novák, volám z patra z domu.",
+    "NameAnswer": "Tady Josef Novák, volám z domu.",
     "LocationAnswer": "Ulice U Lesa 45, je to ta bílá vila na konci slepé ulice.",
-    "InjuryAnswer": "Zatím nikdo, jsem zamčený v domě a nikdo o mně neví.",
+    "InjuryAnswer": "Nikdo, jsem zamčený v domě a nikdo o mně neví.",
     "DetailsAnswer": "Vidím dva lidi v černých mikinách, mají u sebe nějaké nářadí."
   },
   {
@@ -65,7 +65,7 @@
     "EventName": "Požár skladu",
     "Text": "Hoří sklad v průmyslové zóně! Plameny už šlehají střechou!",
     "Difficulty": "Těžká",
-    "RequiredUnits": ["Hasiči", "Pořádková policie"],
+    "RequiredUnits": ["Hasiči", "Pořádková policie", "Záchranka"],
     "NameAnswer": "Ostraha objektu, jmenuji se Vlastimil Drbal.",
     "LocationAnswer": "Areál Technometal, hala číslo 4, zadní brána.",
     "InjuryAnswer": "Všichni zaměstnanci by měli být venku, nikdo nechybí.",
@@ -80,8 +80,8 @@
     "RequiredUnits": ["Pořádková policie", "Záchranka"],
     "NameAnswer": "Alena Tichá, jsem schovaná v bytě.",
     "LocationAnswer": "Sídliště Mír, blok B, třetí patro.",
-    "InjuryAnswer": "Zatím nikoho nezranil, ale všichni se bojí vyjít ven.",
-    "DetailsAnswer": "Vypadá to na nějaký záchvat, mluví o spiknutí a má úplně skleněné oči."
+    "InjuryAnswer": "Ano, paní tady leží a krvácí.",
+    "DetailsAnswer": "Už dojeďte prosím."
   },
   {
     "Id": 8,
@@ -89,7 +89,7 @@
     "EventName": "Únik plynu",
     "Text": "Došlo k úniku plynu v bytovém domě! Je to cítit na celém schodišti!",
     "Difficulty": "Střední",
-    "RequiredUnits": ["Hasiči", "Pořádková policie"],
+    "RequiredUnits": ["Hasiči", "Pořádková policie", "Záchranka"],
     "NameAnswer": "Správce domu, Jiří Holas.",
     "LocationAnswer": "Dlouhá třída 120, centrum města.",
     "InjuryAnswer": "Některým lidem je nevolno, ale všichni už jdou ven před dům.",
@@ -125,7 +125,7 @@
   "EventName": "Lustrace: Petr Svoboda",
   "Text": "Vesmír Vesmír, já Delta-4, provádíme kontrolu osob v parku. Žádáme o lustraci.",
   "Difficulty": "Střední",
-  "RequiredUnits": [],
+  "RequiredUnits": ["Pořádková policie"],
   "NameAnswer": "DELTA-4",
   "LocationAnswer": "Městský park, kousek od té velké fontány.", 
   "DetailsAnswer": "Je to Petr Svoboda, narozen 01.01.1990."
@@ -134,12 +134,13 @@
   "Id": 102,
   "Title": "👮 RÁDIO: LIBELA-10",
   "EventName": "Střelba",
-  "Text": "Vesmír Vesmír, já Libela-10, prosím tě slyšíme střelbu. Žádáme o posily a záchranku na pomoc.",
+  
+  "Text": "Vesmír Vesmír, já Libela-10, prosím tě slyšíme střelbu. Žádáme o posily na pomoc.",
   "Difficulty": "Střední",
-  "RequiredUnits": ["Pořádková policie", "Záchranka"],
+  "RequiredUnits": ["Pořádková policie", "Dopravní policie", "Záchranka"],
   "NameAnswer": "LIBELA-10",
   "LocationAnswer": "Je to ulice Slunečná 15, panelový dům u parku.", 
-  "DetailsAnswer": "Nevíme přesně, slyšíme jen střelbu a křik."
+  "DetailsAnswer": "Slyšíme jen střelbu a křik. Radši nám sem pošli i záchranku."
   },
   {
   "Id": 103,
@@ -147,7 +148,7 @@
   "EventName": "Pronásledování vozidla",
   "Text": "Vesmír Vesmír, já Delta-3, pronásledujeme ujíždějící vozidlo. Žádáme o posily a lustraci vozidla.",
   "Difficulty": "Střední",
-  "RequiredUnits": ["Pořádková policie"],
+  "RequiredUnits": ["Pořádková policie", "Dopravní policie"],
   "NameAnswer": "DELTA-3",
   "LocationAnswer": "Jedeme směr centrum, teď projíždímě kolem benzínky.", 
   "DetailsAnswer": "SPZ 1AB 1234, je to černé BMW."

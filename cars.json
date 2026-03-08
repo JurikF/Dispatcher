@@ -3,14 +3,14 @@
     "SPZ": "4S2 4581",
     "Model": "Škoda Octavia (Stříbrná)",
     "Owner": "Jan Novák",
-    "IsStolen": true,
-    "Note": "Vozidlo nahlášeno jako kradené v Praze."
+    "IsStolen": false,
+    "Note": "Žádný záznam."
   },
   {
     "SPZ": "1AB 1234",
-    "Model": "BMW M5 (Černé)",
-    "Owner": "Neznámý",
-    "IsStolen": false,
-    "Note": "Podezření na účast při ilegálních závodech."
+    "Model": "Audi A4 (Černé)",
+    "Owner": "Petr Dvořák",
+    "IsStolen": true,
+    "Note": "Nahlášeno jako kradené dne 15.02.2026."
   }
 ]
