@@ -158,6 +158,13 @@ namespace DispatcherSimulator
                 Font = new Font("Segoe UI", 10F) 
             };
 
+            txtSearchBirth.KeyPress += (s, e) => {
+                if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+                {
+                    e.Handled = true;
+                }
+            };
+
             var lblCarInfo = new Label { 
                 Text = "Vyhledat vozidlo:", 
                 ForeColor = Color.Gold, 
@@ -173,7 +180,7 @@ namespace DispatcherSimulator
                 CharacterCasing = CharacterCasing.Upper,
             };
 
-            // Společné tlačítko
+            // Tlačítko vyhledat
             var btnSearch = new Button { 
                 Text = "VYHLEDAT", 
                 Width = 400, Height = 60, 
@@ -193,8 +200,11 @@ namespace DispatcherSimulator
             };
 
             btnSearch.Click += (s, e) => {
-                // Předáme všechna tři pole do vyhledávací metody
                 PerformLustrace(txtSearchName.Text, txtSearchBirth.Text, txtSearchSPZ.Text, txtLustraceResult);
+
+                txtSearchName.Clear();
+                txtSearchBirth.Clear();
+                txtSearchSPZ.Clear();
             };
 
             pnlInputs.Controls.Add(lblPersonInfo);
@@ -211,7 +221,7 @@ namespace DispatcherSimulator
 
             mainLayout.Controls.Add(p3, 0, 1);
 
-            // PRAVÝ DOLNÍ - HISTORIE HOVORŮ (TADY JE ZMĚNA)
+            // PRAVÝ DOLNÍ - HISTORIE HOVORŮ
             var p4 = new Panel { Dock = DockStyle.Fill, Padding = new Padding(10), BackColor = Color.FromArgb(30, 30, 30) };
             var lblHistTitle = new Label { Text = "HISTORIE VYŘÍZENÝCH HOVORŮ", Dock = DockStyle.Top, Height = 30, Font = new Font("Segoe UI", 12F, FontStyle.Bold), ForeColor = Color.Gold };
             lstHistory = new ListBox { Dock = DockStyle.Fill, BackColor = Color.FromArgb(40, 40, 40), ForeColor = Color.LightGray, Font = new Font("Consolas", 15F), BorderStyle = BorderStyle.None };
@@ -220,7 +230,6 @@ namespace DispatcherSimulator
             lstHistory.DoubleClick += LstHistory_DoubleClick;
             mainLayout.Controls.Add(p4, 1, 1);
 
-            // Příprava tlačítek jednotek (budou se zobrazovat v terminálu)
             SetupUnitSelection();
         }
 
@@ -239,9 +248,6 @@ namespace DispatcherSimulator
                 detailForm.BackColor = Color.White;
                 detailForm.MaximizeBox = false;
                 detailForm.MinimizeBox = false;
-
-                // KLÍČOVÁ OPRAVA PRO TOPMOST:
-                // Nastavíme oknu stejnou prioritu jako má hlavní hra
                 detailForm.TopMost = true; 
 
                 Label lblInfo = new Label {
@@ -270,16 +276,45 @@ namespace DispatcherSimulator
 
         private void SetupUnitSelection()
         {
-            _unitSelectionPanel.Controls.Add(CreateUnitButton("Pořádková policie", Color.Blue, "Pořádková policie"));
-            _unitSelectionPanel.Controls.Add(CreateUnitButton("Dopravní policie", Color.Blue, "Dopravní policie"));
+            _unitSelectionPanel.Controls.Add(CreateUnitButton("Pořádková policie", Color.FromArgb(30, 144, 255), "Pořádková policie"));
+            _unitSelectionPanel.Controls.Add(CreateUnitButton("Dopravní policie", Color.FromArgb(173, 255, 47), "Dopravní policie"));
             _unitSelectionPanel.Controls.Add(CreateUnitButton("Hasiči", Color.Red, "Hasiči"));
             _unitSelectionPanel.Controls.Add(CreateUnitButton("Záchranka", Color.Gold, "Záchranka"));
         }
 
         private Panel CreateUnitButton(string text, Color activeColor, string type) {
-            var p = new Panel { Width = 180, Height = 35, BackColor = Color.FromArgb(60, 60, 60), Margin = new Padding(3), Tag = false, AccessibleName = type, Cursor = Cursors.Hand };
-            p.Controls.Add(new Label { Text = text, ForeColor = Color.White, Dock = DockStyle.Fill, TextAlign = ContentAlignment.MiddleCenter, Enabled = false, Font = new Font("Segoe UI", 8F, FontStyle.Bold) });
-            p.Click += (s, e) => { bool sel = !(bool)p.Tag; p.Tag = sel; p.BackColor = sel ? activeColor : Color.FromArgb(60, 60, 60); };
+            var p = new Panel { 
+                Width = 180, 
+                Height = 35, 
+                BackColor = Color.FromArgb(210, 210, 210), 
+                Margin = new Padding(3), 
+                Tag = false, 
+                AccessibleName = type, 
+                Cursor = Cursors.Hand 
+            };
+
+            var lbl = new Label { 
+                Text = text, 
+                ForeColor = Color.Black,
+                Dock = DockStyle.Fill, 
+                TextAlign = ContentAlignment.MiddleCenter, 
+                Enabled = false, 
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold) 
+            };
+            p.Controls.Add(lbl);
+
+            p.Click += (s, e) => { 
+                bool sel = !(bool)p.Tag; 
+                p.Tag = sel; 
+                
+                if (sel) {
+                    p.BackColor = activeColor;
+                    lbl.ForeColor = Color.White;
+                } else {
+                    p.BackColor = Color.FromArgb(210, 210, 210);
+                    lbl.ForeColor = Color.Black;
+                }
+            };
             return p;
         }
 
@@ -293,10 +328,11 @@ namespace DispatcherSimulator
                 // 1. PŘEDNOST MÁ SPZ (pokud není prázdná)
                 if (!string.IsNullOrWhiteSpace(spz))
                 {
-                    string path = Path.Combine(Application.StartupPath, "C:\\Users\\Filip\\Desktop\\Dispatcher\\cars.json");
-                    if (File.Exists(path))
+                    string rootPath = AppContext.BaseDirectory;
+                    string jsonPath = Path.Combine(rootPath, "cars.json");
+                    if (File.Exists(jsonPath))
                     {
-                        var cars = JsonSerializer.Deserialize<List<Car>>(File.ReadAllText(path), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        var cars = JsonSerializer.Deserialize<List<Car>>(File.ReadAllText(jsonPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         var car = cars?.FirstOrDefault(c => c.SPZ.Equals(spz.Trim(), StringComparison.OrdinalIgnoreCase));
 
                         if (car != null)
@@ -314,13 +350,14 @@ namespace DispatcherSimulator
                     }
                 }
 
-                // 2. LUSTRACE OSOBY (pokud není vyplněná SPZ nebo se auto nenašlo)
+                
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    string path = Path.Combine(Application.StartupPath, "C:\\Users\\Filip\\Desktop\\Dispatcher\\people.json");
-                    if (File.Exists(path))
+                    string rootPath = AppContext.BaseDirectory;
+                    string jsonPath = Path.Combine(rootPath, "people.json");
+                    if (File.Exists(jsonPath))
                     {
-                        var people = JsonSerializer.Deserialize<List<Person>>(File.ReadAllText(path), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                        var people = JsonSerializer.Deserialize<List<Person>>(File.ReadAllText(jsonPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         var person = people?.FirstOrDefault(p => 
                             (p.FirstName + " " + p.LastName).Equals(name.Trim(), StringComparison.OrdinalIgnoreCase) && 
                             p.BirthDate.Trim() == birth.Trim());
@@ -399,17 +436,17 @@ namespace DispatcherSimulator
             // ROZCESTNÍK: Je to policie, nebo civilista?
             if (scenario.Title.Contains("👮"))
             {   
-                AddQuestionButton("POLOHA HLÍDKY", new[] { 
+                AddQuestionButton("POLOHA", new[] { 
                 "Udejte vaši přesnou polohu.", 
                 "Kde se právě nacházíte?", 
-                "Vaše GPS nebo ulice?" 
+                "Vaše GPS nebo ulice?"
             }, scenario.LocationAnswer, callerName);
 
                 // 1. SITUACE: STŘELBA / NAPADENÍ
                 if (scenario.Text.Contains("střelb") || scenario.Text.Contains("napaden"))
                 {
                     AddQuestionButton("STAV NA MÍSTĚ", new[] { "Jaká je situace na místě? Jsou tam zranění?" }, scenario.DetailsAnswer, callerName);
-                    AddQuestionButton("POTVRDIT PŘÍJEM", new[] { "Posílám posily." }, "Rozumím vesmíre.", callerName);
+                    AddQuestionButton("POSÍLÁM POSILY", new[] { "Posílám posily." }, "Rozumím vesmíre.", callerName);
                 }
                 // 2. SITUACE: PRONÁSLEDOVÁNÍ VOZIDLA
                 else if (scenario.Text.Contains("pronásledujeme") || scenario.Text.Contains("vozidlo"))
@@ -467,9 +504,9 @@ namespace DispatcherSimulator
             else
             {
                 // --- STANDARDNÍ TLAČÍTKA PRO CIVILISTY ---
-                AddQuestionButton("Jméno", new[] { "S kým mluvím?", "Vaše jméno?" }, scenario.NameAnswer, callerName);
+                AddQuestionButton("Jméno", new[] { "S kým mluvím prosím?", "Vaše jméno?", "Jak se jmenujete?" }, scenario.NameAnswer, callerName);
                 AddQuestionButton("Lokalita", new[] { "Kde přesně jste?", "Udejte polohu." }, scenario.LocationAnswer, callerName);
-                AddQuestionButton("Zranění", new[] { "Jsou tam zranění?" }, scenario.InjuryAnswer, callerName);
+                AddQuestionButton("Zranění", new[] { "Jsou tam zranění?", "Je někdo zraněný?" }, scenario.InjuryAnswer, callerName);
                 AddQuestionButton("Detaily", new[] { "Co se tam děje?", "Popište mi situaci." }, scenario.DetailsAnswer, callerName);
             }
         };
@@ -482,11 +519,12 @@ namespace DispatcherSimulator
     var b = new Button 
     { 
         Text = buttonText, 
-        Width = 100, 
+        Width = 110, 
         Height = 35, 
         BackColor = Color.FromArgb(210, 210, 210),
         ForeColor = Color.Black, 
-        FlatStyle = FlatStyle.Flat 
+        FlatStyle = FlatStyle.Flat,
+        TextAlign = ContentAlignment.MiddleCenter
     };
 
     b.Click += (s, e) => { 
@@ -515,7 +553,7 @@ namespace DispatcherSimulator
                 BackColor = Color.FromArgb(210, 210, 210),
                 ForeColor = Color.Black,
                 FlatStyle = FlatStyle.Flat,
-                Font = new Font("Segoe UI", 8F, FontStyle.Bold)
+                TextAlign = ContentAlignment.MiddleCenter
             };
 
             b.Click += (s, e) => {
@@ -579,11 +617,12 @@ namespace DispatcherSimulator
     try
     {
         // Cesta k souboru (předpokládá se, že je u .exe souboru)
-        string path = Path.Combine(Application.StartupPath, "C:\\Users\\Filip\\Desktop\\Dispatcher\\scenarios.json");
+        string rootPath = AppContext.BaseDirectory;
+        string jsonPath = Path.Combine(rootPath, "scenarios.json");
 
-        if (File.Exists(path))
+        if (File.Exists(jsonPath))
         {
-            string jsonString = File.ReadAllText(path);
+            string jsonString = File.ReadAllText(jsonPath);
             
             // Nastavení pro dekódování (velká/malá písmena v JSONu nebudou vadit)
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };

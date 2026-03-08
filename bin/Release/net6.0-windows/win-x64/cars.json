@@ -1,0 +1,16 @@
+[
+  {
+    "SPZ": "4S2 4581",
+    "Model": "Škoda Octavia (Stříbrná)",
+    "Owner": "Jan Novák",
+    "IsStolen": true,
+    "Note": "Vozidlo nahlášeno jako kradené v Praze."
+  },
+  {
+    "SPZ": "1AB 1234",
+    "Model": "Audi A4 (Černé)",
+    "Owner": "Neznámý",
+    "IsStolen": false,
+    "Note": "Podezření na účast při ilegálních závodech."
+  }
+]

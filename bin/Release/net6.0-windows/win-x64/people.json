@@ -1,0 +1,16 @@
+[
+  {
+    "FirstName": "Jan",
+    "LastName": "Novák",
+    "BirthDate": "15.05.1985",
+    "IsWanted": true,
+    "Note": "Podezřelý z ozbrojeného přepadení. Extrémně nebezpečný!"
+  },
+  {
+    "FirstName": "Petr",
+    "LastName": "Svoboda",
+    "BirthDate": "01.01.1990",
+    "IsWanted": false,
+    "Note": "Častý oznamovatel (narušená psychika)."
+  }
+]
