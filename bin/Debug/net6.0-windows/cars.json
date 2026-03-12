@@ -1,34 +1,10 @@
-<<<<<<< HEAD
 [
-  {
-    "SPZ": "4S2 4581",
-    "Model": "Škoda Octavia (Stříbrná)",
-    "Owner": "Jan Novák",
-    "IsStolen": false,
-    "Note": "Žádný záznam."
-  },
   {
     "SPZ": "1AB 1234",
     "Model": "Audi A4 (Černé)",
     "Owner": "Petr Dvořák",
     "IsStolen": true,
-    "Note": "Nahlášeno jako kradené dne 15.02.2026."
+    "Note": ""
   }
-=======
-[
-  {
-    "SPZ": "4S2 4581",
-    "Model": "Škoda Octavia (Stříbrná)",
-    "Owner": "Jan Novák",
-    "IsStolen": false,
-    "Note": "Žádný záznam."
-  },
-  {
-    "SPZ": "1AB 1234",
-    "Model": "Audi A4 (Černé)",
-    "Owner": "Petr Dvořák",
-    "IsStolen": true,
-    "Note": "Nahlášeno jako kradené dne 15.02.2026."
-  }
->>>>>>> 71c2a1e48c4b7fc9cb066ef84340ea03bf5db721
+
 ]

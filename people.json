@@ -1,48 +1,17 @@
-<<<<<<< HEAD
+
 [
-  {
-    "FirstName": "Jan",
-    "LastName": "Novák",
-    "BirthDate": "15.05.1985",
-    "IsWanted": false,
-    "Note": "Žádný záznam"
-  },
   {
     "FirstName": "Petr",
     "LastName": "Svoboda",
     "BirthDate": "01.01.1990",
     "IsWanted": true,
-    "Note": "Nenastoupil do výkonu trestu."
+    "Note": ""
   },
   {
     "FirstName": "Petr",
     "LastName": "Dvořák",
     "BirthDate": "01.09.1978",
     "IsWanted": false,
-    "Note": "Žádný záznam"
+    "Note": ""
   }
-=======
-[
-  {
-    "FirstName": "Jan",
-    "LastName": "Novák",
-    "BirthDate": "15.05.1985",
-    "IsWanted": false,
-    "Note": "Žádný záznam"
-  },
-  {
-    "FirstName": "Petr",
-    "LastName": "Svoboda",
-    "BirthDate": "01.01.1990",
-    "IsWanted": true,
-    "Note": "Nenastoupil do výkonu trestu."
-  },
-  {
-    "FirstName": "Petr",
-    "LastName": "Dvořák",
-    "BirthDate": "01.09.1978",
-    "IsWanted": false,
-    "Note": "Žádný záznam"
-  }
->>>>>>> 71c2a1e48c4b7fc9cb066ef84340ea03bf5db721
 ]

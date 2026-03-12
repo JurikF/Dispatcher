@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
+using System.Text.Json;
 using System.Windows.Forms;
 
 namespace DispatcherSimulator
@@ -15,46 +17,75 @@ namespace DispatcherSimulator
         private Button _btnPrev;
         private Button _btnMenu;
 
-        private readonly List<(string Title, string Text, Color Accent)> _steps = new()
-        {
-            ("CENTRÁLA DISPEČINKU", "Vítejte v tréninkovém programu. Jako operátor linky 112 jste první linií mezi občanem v nouzi a pomocí.", Color.Gold),
-            ("1. PŘÍJEM VOLÁNÍ", "Když zazvoní telefon, vlevo nahoře se objeví karta hovoru. Kliknutím na ni hovor přijmete.\n\nTip: Nečekejte příliš dlouho, jinak hovor propadne!", Color.SkyBlue),
-            ("2. KOMUNIKACE", "V dialogovém okně (vpravo nahoře) veďte hovor. Máte možnost se ptát na informace", Color.LimeGreen),
-            ("3. NASAZENÍ SIL", "Podle zjištěných informací vyberte jednotky vpravo dole.\n\nKlikněte na typ jednotky a poté potvrďte tlačítkem UKONČIT A POSLAT.", Color.OrangeRed),
-            ("4. SKÓRE A ÚSPĚCH", "Za každou správně vyslanou pomoc získáte body.\n\nPokud pošlete špatnou jednotku, vaše celkové hodnocení klesne.", Color.White)
-        };
+        // Třídy pro správné načtení struktury z tutorial.json
+        private class TutorialData 
+        { 
+            public List<TutorialStep> CZ { get; set; } 
+            public List<TutorialStep> EN { get; set; } 
+        }
 
-        public TutorialForm()
+        private class TutorialStep 
+        { 
+            public int Step { get; set; }
+            public string Title { get; set; } 
+            public string Description { get; set; } 
+            public string Accent { get; set; } 
+        }
+
+        private List<TutorialStep> _currentSteps = new();
+        private string _currentLang = "CZ"; // Zatím natvrdo CZ
+
+        public TutorialForm(string lang) // Teď přijímá "CZ" nebo "EN"
         {
+            _currentLang = lang; // Tímto se nastaví jazyk před načtením dat
+            
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
             this.BackColor = Color.FromArgb(20, 20, 20);
 
+            LoadTutorialData(); // Teď už LoadTutorialData ví, jaký jazyk načíst
             InitializeUI();
             UpdateStep();
         }
 
+        private void LoadTutorialData()
+        {
+            try
+            {
+                string path = Path.Combine(AppContext.BaseDirectory, "tutorial.json");
+                if (File.Exists(path))
+                {
+                    string jsonContent = File.ReadAllText(path);
+                    var data = JsonSerializer.Deserialize<TutorialData>(jsonContent, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    
+                    if (data != null)
+                    {
+                        _currentSteps = (_currentLang == "CZ") ? data.CZ : data.EN;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Chyba při načítání tutorial.json: " + ex.Message);
+                // Nouzový řádek, kdyby se něco pokazilo
+                _currentSteps = new List<TutorialStep> { new TutorialStep { Title = "CHYBA", Description = "Nepodařilo se načíst data.", Accent = "Red" } };
+            }
+        }
+
         private void InitializeUI()
         {
-            // Horní panel pro titulek
+            // Horní panel
             var topPanel = new Panel { Dock = DockStyle.Top, Height = 120, BackColor = Color.FromArgb(35, 35, 35) };
-            _lblTitle = new Label
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Segoe UI", 32F, FontStyle.Bold),
-                TextAlign = ContentAlignment.MiddleCenter
-            };
+            _lblTitle = new Label { Dock = DockStyle.Fill, Font = new Font("Segoe UI", 32F, FontStyle.Bold), TextAlign = ContentAlignment.MiddleCenter };
             topPanel.Controls.Add(_lblTitle);
 
-            // Spodní panel pro navigaci
+            // Spodní panel
             var bottomPanel = new Panel { Dock = DockStyle.Bottom, Height = 120, BackColor = Color.FromArgb(35, 35, 35) };
 
-            // Tlačítko ZPĚT DO MENU (vlevo)
             _btnMenu = new Button
             {
                 Text = "🏠 MENU",
                 Size = new Size(180, 60),
-                Location = new Point(30, 30),
                 BackColor = Color.FromArgb(150, 40, 40),
                 ForeColor = Color.White,
                 FlatStyle = FlatStyle.Flat,
@@ -63,10 +94,9 @@ namespace DispatcherSimulator
             };
             _btnMenu.Click += (s, e) => this.Close();
 
-            // Tlačítko PŘEDCHOZÍ (uprostřed vlevo)
             _btnPrev = new Button
             {
-                Text = "< PŘEDCHOZÍ",
+                Text = _currentLang == "CZ" ? "< PŘEDCHOZÍ" : "< PREVIOUS",
                 Size = new Size(200, 60),
                 BackColor = Color.FromArgb(60, 60, 60),
                 ForeColor = Color.White,
@@ -76,10 +106,9 @@ namespace DispatcherSimulator
             };
             _btnPrev.Click += (s, e) => { if (_step > 0) { _step--; UpdateStep(); } };
 
-            // Tlačítko DALŠÍ (uprostřed vpravo)
             _btnNext = new Button
             {
-                Text = "DALŠÍ >",
+                Text = _currentLang == "CZ" ? "DALŠÍ >" : "NEXT >",
                 Size = new Size(200, 60),
                 BackColor = Color.FromArgb(0, 120, 215),
                 ForeColor = Color.White,
@@ -88,26 +117,15 @@ namespace DispatcherSimulator
                 Cursor = Cursors.Hand
             };
             _btnNext.Click += (s, e) => {
-                if (_step < _steps.Count - 1) { _step++; UpdateStep(); }
+                if (_step < _currentSteps.Count - 1) { _step++; UpdateStep(); }
                 else { this.Close(); }
             };
 
-            // Informace o stránce
-            _lblPageInfo = new Label
-            {
-                Size = new Size(200, 30),
-                ForeColor = Color.Gray,
-                Font = new Font("Segoe UI", 11F),
-                TextAlign = ContentAlignment.MiddleCenter
-            };
+            _lblPageInfo = new Label { Size = new Size(200, 30), ForeColor = Color.Gray, Font = new Font("Segoe UI", 11F), TextAlign = ContentAlignment.MiddleCenter };
 
-            // Layout navigace (centrování tlačítek)
-            bottomPanel.Controls.Add(_btnMenu);
-            bottomPanel.Controls.Add(_btnPrev);
-            bottomPanel.Controls.Add(_btnNext);
-            bottomPanel.Controls.Add(_lblPageInfo);
+            bottomPanel.Controls.AddRange(new Control[] { _btnMenu, _btnPrev, _btnNext, _lblPageInfo });
 
-            // Hlavní text
+            // Hlavní text uprostřed
             _lblDescription = new Label
             {
                 Dock = DockStyle.Fill,
@@ -121,9 +139,10 @@ namespace DispatcherSimulator
             this.Controls.Add(topPanel);
             this.Controls.Add(bottomPanel);
 
-            // Logika pro správné umístění prvků při startu/změně velikosti
+            // Centrování tlačítek
             this.Layout += (s, e) => {
                 int centerX = this.ClientSize.Width / 2;
+                _btnMenu.Location = new Point(30, 30);
                 _btnPrev.Location = new Point(centerX - 210, 30);
                 _btnNext.Location = new Point(centerX + 10, 30);
                 _lblPageInfo.Location = new Point(centerX - 100, 95);
@@ -132,17 +151,20 @@ namespace DispatcherSimulator
 
         private void UpdateStep()
         {
-            var current = _steps[_step];
+            if (_currentSteps == null || _currentSteps.Count == 0) return;
+
+            var current = _currentSteps[_step];
             _lblTitle.Text = current.Title;
-            _lblTitle.ForeColor = current.Accent;
-            _lblDescription.Text = current.Text;
-            _lblPageInfo.Text = $"Krok {_step + 1} z {_steps.Count}";
+            
+            // Převod barvy z textu (Accent)
+            try { _lblTitle.ForeColor = Color.FromName(current.Accent ?? "White"); }
+            catch { _lblTitle.ForeColor = Color.White; }
 
-            // Viditelnost tlačítka Předchozí (na první straně je schované)
+            _lblDescription.Text = current.Description;
+            _lblPageInfo.Text = _currentLang == "CZ" ? $"Krok {_step + 1} z {_currentSteps.Count}" : $"Step {_step + 1} of {_currentSteps.Count}";
+
             _btnPrev.Visible = (_step > 0);
-
-            // Text tlačítka Další na poslední straně
-            _btnNext.Text = (_step == _steps.Count - 1) ? "DOKONČIT" : "DALŠÍ >";
+            _btnNext.Text = (_step == _currentSteps.Count - 1) ? (_currentLang == "CZ" ? "DOKONČIT" : "FINISH") : (_currentLang == "CZ" ? "DALŠÍ >" : "NEXT >");
         }
     }
 }

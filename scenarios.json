@@ -15,8 +15,8 @@
     "Id": 2,
     "Title": "Příchozí hovor",
     "EventName": "Dopravní nehoda",
-    "Text": "Právě se tady čelně srazila dvě auta! Je to hrozná rána.",
-    "Difficulty": "Lehká",
+    "Text": "Právě se tady čelně srazila dvě auta!",
+    "Difficulty": "Střední",
     "RequiredUnits": ["Záchranka", "Dopravní policie", "Hasiči"],
     "NameAnswer": "Tady Petr Kolínský, jel jsem zrovna kolem.",
     "LocationAnswer": "Hlavní silnice směrem na Prahu, hned za tou velkou benzínkou.",
@@ -39,7 +39,7 @@
     "Id": 4,
     "Title": "Příchozí hovor",
     "EventName": "Vloupání do garáže",
-    "Text": "Sakra, někdo se mi právě teď pokouší vloupat do garáže! Slyším páčení zámku!",
+    "Text": "Někdo se mi právě teď pokouší vloupat do garáže! Slyším páčení zámku!",
     "Difficulty": "Lehká",
     "RequiredUnits": ["Pořádková policie"],
     "NameAnswer": "Tady Josef Novák, volám z domu.",
@@ -67,7 +67,7 @@
     "Difficulty": "Těžká",
     "RequiredUnits": ["Hasiči", "Pořádková policie", "Záchranka"],
     "NameAnswer": "Ostraha objektu, jmenuji se Vlastimil Drbal.",
-    "LocationAnswer": "Areál Technometal, hala číslo 4, zadní brána.",
+    "LocationAnswer": "Areál Technokov, hala číslo 4, zadní brána.",
     "InjuryAnswer": "Všichni zaměstnanci by měli být venku, nikdo nechybí.",
     "DetailsAnswer": "Uvnitř jsou barvy a laky, hrozí výbuch, potřebujeme tu policii na uzavření silnice."
   },
@@ -89,11 +89,11 @@
     "EventName": "Únik plynu",
     "Text": "Došlo k úniku plynu v bytovém domě! Je to cítit na celém schodišti!",
     "Difficulty": "Střední",
-    "RequiredUnits": ["Hasiči", "Pořádková policie", "Záchranka"],
+    "RequiredUnits": ["Hasiči", "Záchranka"],
     "NameAnswer": "Správce domu, Jiří Holas.",
     "LocationAnswer": "Dlouhá třída 120, centrum města.",
     "InjuryAnswer": "Některým lidem je nevolno, ale všichni už jdou ven před dům.",
-    "DetailsAnswer": "Potřebujeme evakuovat celý vchod a uzavřít ulici pro dopravu."
+    "DetailsAnswer": "Je tu hodně lidí a někteří jsou v šoku."
   },
   {
     "Id": 9,
@@ -105,7 +105,7 @@
     "NameAnswer": "Tomáš Petrů, čekal jsem na spoj.",
     "LocationAnswer": "Zastávka Hlavní nádraží, směr do centra.",
     "InjuryAnswer": "Paní nedýchá!",
-    "DetailsAnswer": "Je jí kolem 70 let, má u sebe nákupní tašku."
+    "DetailsAnswer": "Vypadá tak na 70 let."
   },
   {
     "Id": 10,
@@ -134,13 +134,12 @@
   "Id": 102,
   "Title": "👮 RÁDIO: LIBELA-10",
   "EventName": "Střelba",
-  
   "Text": "Vesmír Vesmír, já Libela-10, prosím tě slyšíme střelbu. Žádáme o posily na pomoc.",
-  "Difficulty": "Střední",
+  "Difficulty": "Těžká",
   "RequiredUnits": ["Pořádková policie", "Dopravní policie", "Záchranka"],
   "NameAnswer": "LIBELA-10",
   "LocationAnswer": "Je to ulice Slunečná 15, panelový dům u parku.", 
-  "DetailsAnswer": "Slyšíme jen střelbu a křik. Radši nám sem pošli i záchranku."
+  "DetailsAnswer": "Slyšíme jen střelbu a křik. Raději nám sem pošli i záchranku."
   },
   {
   "Id": 103,
@@ -151,6 +150,6 @@
   "RequiredUnits": ["Pořádková policie", "Dopravní policie"],
   "NameAnswer": "DELTA-3",
   "LocationAnswer": "Jedeme směr centrum, teď projíždímě kolem benzínky.", 
-  "DetailsAnswer": "SPZ 1AB 1234, je to černé BMW."
+  "DetailsAnswer": "SPZ 1AB 1234, je to černá Audina."
   }
 ]

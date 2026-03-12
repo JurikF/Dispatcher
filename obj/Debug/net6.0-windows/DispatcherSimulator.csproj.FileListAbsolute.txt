@@ -16,3 +16,5 @@ C:\Users\Filip\Desktop\Dispatcher\obj\Debug\net6.0-windows\DispatcherSimulator.s
 C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\cars.json
 C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\people.json
 C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\scenarios.json
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\tutorial.json
+C:\Users\Filip\Desktop\Dispatcher\bin\Debug\net6.0-windows\scenarios_en.json
