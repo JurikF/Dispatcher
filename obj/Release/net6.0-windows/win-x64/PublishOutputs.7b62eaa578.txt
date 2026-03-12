@@ -1,5 +1,0 @@
-C:\Users\Filip\Desktop\Dispatcher_Final\DispatcherSimulator.pdb
-C:\Users\Filip\Desktop\Dispatcher_Final\cars.json
-C:\Users\Filip\Desktop\Dispatcher_Final\people.json
-C:\Users\Filip\Desktop\Dispatcher_Final\scenarios.json
-C:\Users\Filip\Desktop\Dispatcher_Final\DispatcherSimulator.exe
