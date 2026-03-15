@@ -44,7 +44,7 @@ namespace DispatcherSimulator
                 GenerateRandomCall();
                 if (_callTimer.Interval == 5000)
                 {
-                    _callTimer.Interval = 5000;
+                    _callTimer.Interval = 30000;
                 }
             };
 
@@ -231,46 +231,83 @@ namespace DispatcherSimulator
         private void PerformLustrace(string name, string birth, string spz, TextBox output)
         {
             bool isEn = GameSettings.CurrentLanguage == "EN";
-            try {
-                output.ForeColor = Color.White; output.Clear();
+            try 
+            {
+                output.ForeColor = Color.White; 
+                output.Clear();
                 string rootPath = AppContext.BaseDirectory;
 
-                if (!string.IsNullOrWhiteSpace(spz)) {
+                // Lustrace Vozidla
+                if (!string.IsNullOrWhiteSpace(spz)) 
+                {
                     string jsonPath = Path.Combine(rootPath, "cars.json");
-                    if (File.Exists(jsonPath)) {
+                    if (File.Exists(jsonPath)) 
+                    {
                         var cars = JsonSerializer.Deserialize<List<Car>>(File.ReadAllText(jsonPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         var car = cars?.FirstOrDefault(c => c.SPZ.Equals(spz.Trim(), StringComparison.OrdinalIgnoreCase));
-                        if (car != null) {
+                        
+                        if (car != null) 
+                        {
                             if (car.IsStolen) output.ForeColor = Color.Red;
-                            output.Text = (isEn ? "VEHICLE DATABASE RESULT:" : "VÝSLEDEK LUSTRACE VOZIDLA:") + "\r\n----------------------\r\n" +
-                                $"SPZ: {car.SPZ}\r\nMODEL: {car.Model}\r\nOWNER: {car.Owner}\r\n" +
-                                $"STATUS: {(car.IsStolen ? (isEn ? "STOLEN" : "KRADENÉ") : (isEn ? "Clear" : "V pořádku"))}\r\n" +
-                                $"NOTE: {car.Note}";
+                            
+                            string header = isEn ? "VEHICLE DATABASE RESULT:" : "VÝSLEDEK LUSTRACE VOZIDLA:";
+                            string modelLbl = isEn ? "MODEL" : "MODEL"; // V češtině i angličtině stejné
+                            string ownerLbl = isEn ? "OWNER" : "MAJITEL";
+                            string statusLbl = isEn ? "STATUS" : "STAV";
+                            string noteLbl = isEn ? "NOTE" : "POZNÁMKA";
+                            string statusVal = car.IsStolen ? (isEn ? "STOLEN" : "KRADENÉ") : (isEn ? "Clear" : "V pořádku");
+
+                            output.Text = $"{header}\r\n----------------------\r\n" +
+                                        $"SPZ: {car.SPZ}\r\n" +
+                                        $"{modelLbl}: {car.Model}\r\n" +
+                                        $"{ownerLbl}: {car.Owner}\r\n" +
+                                        $"{statusLbl}: {statusVal}\r\n" +
+                                        $"{noteLbl}: {car.Note}";
                             return;
                         }
                     }
                 }
 
-                if (!string.IsNullOrWhiteSpace(name)) {
+                // Lustrace Osoby
+                if (!string.IsNullOrWhiteSpace(name)) 
+                {
                     string jsonPath = Path.Combine(rootPath, "people.json");
-                    if (File.Exists(jsonPath)) {
+                    if (File.Exists(jsonPath)) 
+                    {
                         var people = JsonSerializer.Deserialize<List<Person>>(File.ReadAllText(jsonPath), new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
                         var person = people?.FirstOrDefault(p => (p.FirstName + " " + p.LastName).Equals(name.Trim(), StringComparison.OrdinalIgnoreCase) && p.BirthDate.Trim() == birth.Trim());
-                        if (person != null) {
+                        
+                        if (person != null) 
+                        {
                             if (person.IsWanted) output.ForeColor = Color.Red;
-                            output.Text = (isEn ? "PERSON DATABASE RESULT:" : "VÝSLEDEK LUSTRACE OSOBY:") + "\r\n----------------------\r\n" +
-                                $"NAME: {person.FirstName} {person.LastName}\r\nBORN: {person.BirthDate}\r\n" +
-                                $"STATUS: {(person.IsWanted ? (isEn ? "WANTED" : "PÁTRÁNÍ") : (isEn ? "Clear" : "Negativní"))}\r\n" +
-                                $"NOTE: {person.Note}";
+                            
+                            string header = isEn ? "PERSON DATABASE RESULT:" : "VÝSLEDEK LUSTRACE OSOBY:";
+                            string nameLbl = isEn ? "NAME" : "JMÉNO";
+                            string bornLbl = isEn ? "BORN" : "NAROZEN";
+                            string statusLbl = isEn ? "STATUS" : "STAV";
+                            string noteLbl = isEn ? "NOTE" : "POZNÁMKA";
+                            string statusVal = person.IsWanted ? (isEn ? "WANTED" : "PÁTRÁNÍ") : (isEn ? "Clear" : "Negativní");
+
+                            output.Text = $"{header}\r\n----------------------\r\n" +
+                                        $"{nameLbl}: {person.FirstName} {person.LastName}\r\n" +
+                                        $"{bornLbl}: {person.BirthDate}\r\n" +
+                                        $"{statusLbl}: {statusVal}\r\n" +
+                                        $"{noteLbl}: {person.Note}";
                             return;
                         }
                     }
                 }
+
+                // Nenalezeno
                 output.Text = isEn ? "SYSTEM: No records found." : "SYSTÉM: Žádný záznam neodpovídá parametrům.";
             }
-            catch (Exception ex) { output.ForeColor = Color.Orange; output.Text = "ERR: " + ex.Message; }
+            catch (Exception ex) 
+            { 
+                output.ForeColor = Color.Orange; 
+                output.Text = "ERR: " + ex.Message; 
+            }
         }
-
+        
         private void GenerateRandomCall()
         {
             if (_scenarios == null || _scenarios.Count == 0) return;
