@@ -18,7 +18,7 @@ namespace DispatcherSimulator
         private string _selectedDifficultyFilter = "Všechny obtížnosti";
         private Timer _callTimer;
 
-        // Terminál hovoru (Vpravo nahoře)
+        // Terminál hovoru
         private Panel _activeCallPanel;
         private TextBox _txtChatDisplay;
         private FlowLayoutPanel _questionFlowPanel;
@@ -27,7 +27,7 @@ namespace DispatcherSimulator
         private Panel _currentActiveCard;
         private Label lblNoCall;
 
-        // Historie (Vpravo dole)
+        // Historie
         private ListBox lstHistory;
 
         public MainForm(string vybranaObtiznost)
@@ -251,7 +251,7 @@ namespace DispatcherSimulator
                             if (car.IsStolen) output.ForeColor = Color.Red;
                             
                             string header = isEn ? "VEHICLE DATABASE RESULT:" : "VÝSLEDEK LUSTRACE VOZIDLA:";
-                            string modelLbl = isEn ? "MODEL" : "MODEL"; // V češtině i angličtině stejné
+                            string modelLbl = isEn ? "MODEL" : "MODEL";
                             string ownerLbl = isEn ? "OWNER" : "MAJITEL";
                             string statusLbl = isEn ? "STATUS" : "STAV";
                             string noteLbl = isEn ? "NOTE" : "POZNÁMKA";
@@ -298,7 +298,6 @@ namespace DispatcherSimulator
                     }
                 }
 
-                // Nenalezeno
                 output.Text = isEn ? "SYSTEM: No records found." : "SYSTÉM: Žádný záznam neodpovídá parametrům.";
             }
             catch (Exception ex) 
@@ -337,7 +336,6 @@ namespace DispatcherSimulator
                 if (isPolice) {
                     AddQuestionButton(isEn ? "LOCATION" : "POLOHA", new[] { isEn ? "What is your location?" : "Udejte vaši polohu." }, scenario.LocationAnswer, callerName);
                     
-                    // Detekce střelby / napadení (CZ i EN slova)
                     if (scenario.Text.ToLower().Contains("střelb") || scenario.Text.ToLower().Contains("shot") || 
                         scenario.Text.ToLower().Contains("napaden") || scenario.Text.ToLower().Contains("attack") || 
                         scenario.Text.ToLower().Contains("firing") || scenario.Text.ToLower().Contains("assault")) {
@@ -345,16 +343,13 @@ namespace DispatcherSimulator
                         AddQuestionButton(isEn ? "SITUATION" : "STAV NA MÍSTĚ", new[] { isEn ? "Status report? Injuries?" : "Jaká je situace? Jsou tam zranění?" }, scenario.DetailsAnswer, callerName);
                         AddQuestionButton(isEn ? "BACKUP" : "POSÍLÁM POSILY", new[] { isEn ? "Units dispatched." : "Posílám posily." }, isEn ? "Copy that." : "Rozumím.", callerName);
                     } 
-                    // Detekce vozidla (CZ i EN slova)
                     else if (scenario.Text.ToLower().Contains("vozidlo") || scenario.Text.ToLower().Contains("car") || 
                         scenario.Text.ToLower().Contains("spz") || scenario.Text.ToLower().Contains("plate") || 
                         scenario.Text.ToLower().Contains("vehicle") || scenario.Text.ToLower().Contains("pursuit")) 
                     {
-                        // Základní otázky
                         AddQuestionButton(isEn ? "PLATE" : "ŽÁDAT SPZ", new[] { isEn ? "Send the plate number." : "Udejte SPZ vozidla." }, scenario.DetailsAnswer, callerName);
                         AddQuestionButton(isEn ? "BACKUP" : "POSÍLÁM POSILY", new[] { isEn ? "Backup is on the way." : "Posílám k vám další hlídky." }, isEn ? "Copy." : "Rozumím.", callerName);
 
-                        // Tlačítka pro výsledek lustrace vozidla
                         var b1 = CreateQuestionButton(isEn ? "STOLEN" : "ODCIZENO", 
                             new[] { isEn ? "Vehicle is reported as stolen!" : "Vozidlo je nahlášeno jako kradené!" }, 
                             isEn ? "Copy, we are engaging!" : "Rozumím, zahajujeme zákrok!", callerName);
@@ -363,18 +358,15 @@ namespace DispatcherSimulator
                             new[] { isEn ? "Vehicle is not stolen." : "Vozidlo není hlášeno jako kradené." }, 
                             isEn ? "Copy, continuing patrol." : "Rozumím, pokračujeme v hlídce.", callerName);
 
-                        // Logika zamknutí (po kliknutí na jedno se druhé zablokuje a zešedne)
                         b1.Click += (x, y) => { b1.Enabled = b2.Enabled = false; b2.BackColor = Color.Gray; };
                         b2.Click += (x, y) => { b2.Enabled = b1.Enabled = false; b1.BackColor = Color.Gray; };
 
                         _questionFlowPanel.Controls.Add(b1);
                         _questionFlowPanel.Controls.Add(b2);
                     }
-                    // Standardní hlášení (Lustrace osoby)
                     else {
                         AddQuestionButton(isEn ? "DATA" : "ŽÁDAT ÚDAJE", new[] { isEn ? "Send ID details." : "Nadiktujte údaje." }, scenario.DetailsAnswer, callerName);
                         
-                        // Přidání tlačítek pro výsledek lustrace i do anglické verze
                         var b1 = CreateQuestionButton(isEn ? "WANTED" : "JE HLEDANÝ", new[] { isEn ? "Person is wanted!" : "Osoba je v pátrání!" }, isEn ? "Requesting backup." : "Žádáme posilu.", callerName);
                         var b2 = CreateQuestionButton(isEn ? "CLEAN" : "NENÍ HLEDANÝ", new[] { isEn ? "Person is clean." : "Osoba je čistá." }, isEn ? "Copy, finishing." : "Díky, končíme.", callerName);
                         
@@ -385,7 +377,6 @@ namespace DispatcherSimulator
                         _questionFlowPanel.Controls.Add(b2);
                     }
                 } else {
-                    // STANDARDNÍ TLAČÍTKA PRO CIVILISTY
                     AddQuestionButton(isEn ? "Name" : "Jméno", new[] { isEn ? "Who am I speaking with?" : "S kým mluvím?" }, scenario.NameAnswer, callerName);
                     AddQuestionButton(isEn ? "Location" : "Lokalita", new[] { isEn ? "Where are you?" : "Kde přesně jste?" }, scenario.LocationAnswer, callerName);
                     AddQuestionButton(isEn ? "Injuries" : "Zranění", new[] { isEn ? "Are there any injuries?" : "Jsou tam zranění?" }, scenario.InjuryAnswer, callerName);

@@ -17,7 +17,6 @@ namespace DispatcherSimulator
         private Button _btnPrev;
         private Button _btnMenu;
 
-        // Třídy pro správné načtení struktury z tutorial.json
         private class TutorialData 
         { 
             public List<TutorialStep> CZ { get; set; } 
@@ -33,17 +32,17 @@ namespace DispatcherSimulator
         }
 
         private List<TutorialStep> _currentSteps = new();
-        private string _currentLang = "CZ"; // Zatím natvrdo CZ
+        private string _currentLang = "CZ";
 
-        public TutorialForm(string lang) // Teď přijímá "CZ" nebo "EN"
+        public TutorialForm(string lang)
         {
-            _currentLang = lang; // Tímto se nastaví jazyk před načtením dat
+            _currentLang = lang;
             
             this.WindowState = FormWindowState.Maximized;
             this.FormBorderStyle = FormBorderStyle.None;
             this.BackColor = Color.FromArgb(20, 20, 20);
 
-            LoadTutorialData(); // Teď už LoadTutorialData ví, jaký jazyk načíst
+            LoadTutorialData();
             InitializeUI();
             UpdateStep();
         }
@@ -67,19 +66,16 @@ namespace DispatcherSimulator
             catch (Exception ex)
             {
                 MessageBox.Show("Chyba při načítání tutorial.json: " + ex.Message);
-                // Nouzový řádek, kdyby se něco pokazilo
                 _currentSteps = new List<TutorialStep> { new TutorialStep { Title = "CHYBA", Description = "Nepodařilo se načíst data.", Accent = "Red" } };
             }
         }
 
         private void InitializeUI()
         {
-            // Horní panel
             var topPanel = new Panel { Dock = DockStyle.Top, Height = 120, BackColor = Color.FromArgb(35, 35, 35) };
             _lblTitle = new Label { Dock = DockStyle.Fill, Font = new Font("Segoe UI", 32F, FontStyle.Bold), TextAlign = ContentAlignment.MiddleCenter };
             topPanel.Controls.Add(_lblTitle);
 
-            // Spodní panel
             var bottomPanel = new Panel { Dock = DockStyle.Bottom, Height = 120, BackColor = Color.FromArgb(35, 35, 35) };
 
             _btnMenu = new Button
@@ -125,7 +121,6 @@ namespace DispatcherSimulator
 
             bottomPanel.Controls.AddRange(new Control[] { _btnMenu, _btnPrev, _btnNext, _lblPageInfo });
 
-            // Hlavní text uprostřed
             _lblDescription = new Label
             {
                 Dock = DockStyle.Fill,
@@ -139,7 +134,6 @@ namespace DispatcherSimulator
             this.Controls.Add(topPanel);
             this.Controls.Add(bottomPanel);
 
-            // Centrování tlačítek
             this.Layout += (s, e) => {
                 int centerX = this.ClientSize.Width / 2;
                 _btnMenu.Location = new Point(30, 30);
@@ -156,7 +150,6 @@ namespace DispatcherSimulator
             var current = _currentSteps[_step];
             _lblTitle.Text = current.Title;
             
-            // Převod barvy z textu (Accent)
             try { _lblTitle.ForeColor = Color.FromName(current.Accent ?? "White"); }
             catch { _lblTitle.ForeColor = Color.White; }
 

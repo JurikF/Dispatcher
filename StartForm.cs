@@ -8,7 +8,7 @@ namespace DispatcherSimulator
     {
         private FlowLayoutPanel mainMenuPanel;
         private Panel difficultyPanel;
-        private Panel languagePanel; // Nový panel pro výběr jazyka
+        private Panel languagePanel;
         private Label head;
         private Label lblDiff;
         private Button btnPlayMenu, btnTutorial, btnLanguage, btnExitApp, btnBack, btnStartGame;
@@ -23,7 +23,7 @@ namespace DispatcherSimulator
             this.StartPosition = FormStartPosition.CenterScreen;
 
             InitializeUI();
-            UpdateLanguage(); // Nastavíme texty při startu
+            UpdateLanguage();
         }
 
         private void InitializeUI()
@@ -45,19 +45,15 @@ namespace DispatcherSimulator
             int topPadding = 370;
             int centerX = (Screen.PrimaryScreen.Bounds.Width - 400) / 2;
 
-            // HLAVNÍ MENU PANEL
             mainMenuPanel = new FlowLayoutPanel { Width = 400, Height = 500, Location = new Point(centerX, topPadding), FlowDirection = FlowDirection.TopDown, BackColor = Color.Transparent };
             this.Controls.Add(mainMenuPanel);
 
-            // OBTÍŽNOST PANEL
             difficultyPanel = new Panel { Width = 400, Height = 300, BackColor = Color.FromArgb(50, 50, 50), Location = new Point(centerX, topPadding), Visible = false };
             this.Controls.Add(difficultyPanel);
 
-            // JAZYK PANEL (Nový)
             languagePanel = new Panel { Width = 400, Height = 300, BackColor = Color.FromArgb(50, 50, 50), Location = new Point(centerX, topPadding), Visible = false };
             this.Controls.Add(languagePanel);
 
-            // TLAČÍTKA
             btnPlayMenu = CreateMenuButton("", Color.FromArgb(0, 120, 215));
             btnPlayMenu.Click += (s, e) => { mainMenuPanel.Visible = false; difficultyPanel.Visible = true; };
 
@@ -72,7 +68,6 @@ namespace DispatcherSimulator
 
             mainMenuPanel.Controls.AddRange(new Control[] { btnPlayMenu, btnTutorial, btnLanguage, btnExitApp });
 
-            // OBTÍŽNOST OBSAH
             lblDiff = new Label { Font = new Font("Segoe UI", 22F, FontStyle.Bold), ForeColor = Color.White, TextAlign = ContentAlignment.MiddleCenter, Dock = DockStyle.Top, Height = 80 };
             difficultyPanel.Controls.Add(lblDiff);
 
@@ -87,7 +82,6 @@ namespace DispatcherSimulator
             btnBack.Click += (s, e) => { difficultyPanel.Visible = false; mainMenuPanel.Visible = true; };
             difficultyPanel.Controls.Add(btnBack);
 
-            // JAZYK OBSAH (CZ / EN Tlačítka)
             var btnCZ = new Button { Text = "ČEŠTINA", Size = new Size(340, 70), Location = new Point(30, 30), BackColor = Color.FromArgb(0, 120, 215), ForeColor = Color.White, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI", 16F, FontStyle.Bold), Cursor = Cursors.Hand };
             btnCZ.Click += (s, e) => { GameSettings.CurrentLanguage = "CZ"; UpdateLanguage(); languagePanel.Visible = false; mainMenuPanel.Visible = true; };
             
