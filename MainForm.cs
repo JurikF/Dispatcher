@@ -194,7 +194,6 @@ namespace DispatcherSimulator
         {
             bool isEn = GameSettings.CurrentLanguage == "EN";
 
-            // CreateUnitButton(Text na tlačítku, Barva, AccessibleName/ID pro porovnání)
             _unitSelectionPanel.Controls.Add(CreateUnitButton(
                 isEn ? "Patrol Police" : "Pořádková policie", 
                 Color.FromArgb(30, 144, 255), 
